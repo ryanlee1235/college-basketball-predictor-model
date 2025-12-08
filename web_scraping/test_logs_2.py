@@ -2,11 +2,12 @@ import pandas as pd
 import time
 
 teams = ['southern-california']
-year = '2025'
+gender = 'men'
+year = '2026'
 all_games = []
 
 for team in teams:
-    url = f'https://www.sports-reference.com/cbb/schools/{team}/men/{year}-gamelogs.html'
+    url = f'https://www.sports-reference.com/cbb/schools/{team}/{gender}/{year}-gamelogs.html'
     
     try:
         # Read table with header parameter to handle multi-level
@@ -33,6 +34,7 @@ for team in teams:
 
         # Removed the header repeats that came from other like post season stuff
         df = df[df['Date'].notna()]
+        df = df[df['Result'].notna()]
         df = df[df['Date'] != 'Date']
 
         # Convert Win/Draw/Loss to 1/0
@@ -69,16 +71,18 @@ for team in teams:
         df_clean = df[feature_columns]
 
         # Save raw data first to inspect
-        df_clean.to_csv(f'./game_logs/{team}_cleaned.csv', index=False)
-        print(f"✓ {team}: {len(df_clean)} games - saved to {team}_cleaned.csv")
+        # df_clean.to_csv(f'./game_logs/{team}_cleaned.csv', index=False)
         
-        all_games.append(df)
-        time.sleep(3)
+        all_games.append(df_clean)
+        print(f"✓ {team}, {year}: {len(df_clean)} games downloaded")
+        time.sleep(3.5)
         
     except Exception as e:
-        print(f"✗ Error: {e}")
+        print(f"✗ Error with {team}, {year}: {e}")
 
-# if all_games:
-#     final_df = pd.concat(all_games, ignore_index=True)
-#     final_df.to_csv('all_games_raw.csv', index=False)
-#     print("\n✓ Check the CSV files to see column names, then update the script")
+if all_games:
+    final_df = pd.concat(all_games, ignore_index=True)
+    print(final_df.dtypes)
+    final_df.to_csv('2026_test.csv', index=False)
+
+    print("\n✓ Check the CSV files to see column names, then update the script")
