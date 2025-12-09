@@ -1,6 +1,9 @@
 import joblib
+import pandas as pd
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
 
-model = joblib.load('usc_basketball_model.pkl')
+model = joblib.load('usc_predictor_model.pkl')
 
 
 """['Game_num','Day_code', 'Home_away','Team_code','Op_code','Team_pts_L3','Opp_pts_L3','Team_FG%_L3',
